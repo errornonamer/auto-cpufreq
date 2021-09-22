@@ -55,6 +55,17 @@ if [ "$(ps h -o comm 1)" = "runit" ];then
 
 		esac
 	fi
+# Install script for openrc
+elif [ "$(ps h -o comm 1)" = "openrc" ];then
+	echo -e "\n* Deploy auto-cpufreq openrc unit file"
+	cp /usr/local/share/auto-cpufreq/scripts/auto-cpufreq /etc/init.d/auto-cpufreq
+	chmod +x /etc/init.d/auto-cpufreq
+
+	echo -e "Starting auto-cpufreq daemon (openrc) service"
+	rc-service auto-cpufreq start
+
+	echo -e "\n* Enabling auto-cpufreq daemon (openrc) service at boot"
+	rc-update add auto-cpufreq
 # Install script for systemd
 else
     echo -e "\n* Deploy auto-cpufreq systemd unit file"

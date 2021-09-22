@@ -37,6 +37,16 @@ if [ "$(ps h -o comm 1)" = "runit" ];then
 
 		esac
 	fi
+# Remove service for openrc
+elif [ "$(ps h -o comm 1)" = "openrc" ];then
+    echo -e "\n* Stopping auto-cpufreq daemon (openrc) service"
+    rc-service auto-cpufreq stop
+
+    echo -e "\n* Disabling auto-cpufreq daemon (openrc) at boot"
+    rc-update del auto-cpufreq
+
+    echo -e "\n* Removing auto-cpufreq daemon (openrc) unit file"
+    rm /etc/init/auto-cpufreq
 else
     echo -e "\n* Stopping auto-cpufreq daemon (systemd) service"
     systemctl stop auto-cpufreq
