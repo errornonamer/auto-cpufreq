@@ -40,80 +40,66 @@ Supported devices must have an Intel, AMD or ARM CPU's. This tool was developed 
 * Automatic CPU & power optimization (temporary and persistent)
 
 ## Installing auto-cpufreq
-
-### Snap store
-
-auto-cpufreq is available on [snap store](https://snapcraft.io/auto-cpufreq), or can be installed using CLI:
-
-```
-sudo snap install auto-cpufreq
-```
-
-**Please note:** 
-* Make sure [snapd](https://snapcraft.io/docs/installing-snapd) is installed and `snap version` version is >= 2.44 for `auto-cpufreq` to fully work due to [recent snapd changes](https://github.com/snapcore/snapd/pull/8127).
-
-* Fedora users will [encounter following error](https://twitter.com/killyourfm/status/1291697985236144130). Due to `cgroups v2` [being in development](https://github.com/snapcore/snapd/pull/7825). This problem can be resolved by either running `sudo snap run auto-cpufreq` after snap installation. Or using [auto-cpufreq-installer](https://github.com/AdnanHodzic/auto-cpufreq/#auto-cpufreq-installer) which doesn't have this issue.
-
+**Please note:**
+You cannot use the snap store to install the OpenRC version of auto-cpufreq
 ### auto-cpufreq-installer
 
 Get source code, run installer and follow on screen instructions:
 
 ```
-git clone https://github.com/AdnanHodzic/auto-cpufreq.git
-cd auto-cpufreq && sudo ./auto-cpufreq-installer
+git clone https://github.com/errornonamer/auto-cpufreq-openrc.git
+cd auto-cpufreq && # ./auto-cpufreq-installer
 ```
 
 In case you encounter any problems with `auto-cpufreq-installer`, please [submit a bug report](https://github.com/AdnanHodzic/auto-cpufreq/issues/new).
+If you report any problems, make sure to mention that you're using this OpenRC repository.
 
 ### AUR package (Arch/Manjaro Linux)
-
+#Do not use!
 [AUR package is available](https://aur.archlinux.org/packages/auto-cpufreq-git/) for install. After which `auto-cpufreq` will be available as a binary and you can refer to [auto-cpufreq modes and options](https://github.com/AdnanHodzic/auto-cpufreq#auto-cpufreq-modes-and-options).
+#This currently will not work on OpenRC and an AUR package is currently being made for OpenRC
+
 
 **Please note:** If you want to install auto-cpufreq daemon, do not run `auto-cpufreq --install` otherwise you'll run into an issue: [#91](https://github.com/AdnanHodzic/auto-cpufreq/issues/91), [#96](https://github.com/AdnanHodzic/auto-cpufreq/issues/96).
 
-Instead run `systemctl start auto-cpufreq` to start the service. Run `systemctl status auto-cpufreq` to see the status of service, and `systemctl enable auto-cpufreq` for service to persist running accross reboots. 
+Instead run `# rc-service auto-cpufreq start` to start the service. Run `# rc-service auto-cpufreq status` to see the status of service, and `# rc-update add auto-cpufreq default` for service to persist running accross reboots.
 
 ## How to run auto-cpufreq
 
 auto-cpufreq can be run by simply running the `auto-cpufreq` and following on screen instructions, i.e:
 
-`sudo auto-cpufreq`
+`# auto-cpufreq`
 
 ## auto-cpufreq modes and options
 
 ### Monitor
 
-`sudo auto-cpufreq --monitor`
+`# auto-cpufreq --monitor`
 
 No changes are made to the system, and is solely made for demonstration purposes what auto-cpufreq could do differently for your system.
 
 ### Live
 
-`sudo auto-cpufreq --live`
+`# auto-cpufreq --live`
 
 Necessary changes are temporarily made to the system which are lost with system reboot. This mode is made to evaluate what the system would behave with auto-cpufreq permanently running on the system.
 
 ### Install - auto-cpufreq daemon
 
-Necessary changes are made to the system for auto-cpufreq CPU optimizaton to persist across reboots. Daemon is deployed and then started as a systemd service. Changes are made automatically and live stats are generated for monitoring purposes.
-
-`sudo auto-cpufreq --install`
+Necessary changes are made to the system for auto-cpufreq CPU optimizaton to persist across reboots. Daemon needs to be started and applied in OpenRC, see commands above. Changes are made automatically and live stats are generated for monitoring purposes.
+`# auto-cpufreq --install`
 
 After daemon is installed, `auto-cpufreq` is available as a binary and is running in the background. Its stats can be viewed by running: `auto-cpufreq --stats`
 
-Since daemon is running as a systemd service, its status can be seen by running:
+Since daemon is running as an OpenRC service, its status can be seen by running:
 
-`systemctl status auto-cpufreq`
-
-If install has been performed as part of snap package, daemon status can be verified by running: 
-
-`systemctl status snap.auto-cpufreq.service.service`
+`# rc-service auto-cpufreq status`
 
 ### Remove - auto-cpufreq daemon
 
-auto-cpufreq daemon and its systemd service, along with all its persistent changes can be removed by running:
+auto-cpufreq daemon and its OpenRC service, along with all its persistent changes can be removed by running:
 
-`sudo auto-cpufreq --remove`
+`# rc-service auto-cpufreq stop && rc-update del auto-cpufreq default`
 
 ### Stats
 
@@ -130,7 +116,7 @@ If daemon has been installed, live stats of CPU/system load monitoring and optim
 
 **A:** If you're using `intel_pstate` CPU management driver consider changing it to: `acpi-cpufreq`.
 
-This can be done by editting `/etc/default/grub` file and appending `intel_pstate=disable` to `GRUB_CMDLINE_LINUX_DEFAULT` line, followed by `sudo update-grub`
+This can be done by editting `/etc/default/grub` file and appending `intel_pstate=disable` to `GRUB_CMDLINE_LINUX_DEFAULT` line, followed by `# update-grub`
 
 Example line change:
 
