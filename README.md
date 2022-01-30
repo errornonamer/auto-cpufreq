@@ -97,7 +97,7 @@ Since daemon is running as an OpenRC service, its status can be seen by running:
 
 ### Remove - auto-cpufreq daemon
 
-auto-cpufreq daemon and its systemd service, along with all its persistent changes can be removed by running:
+auto-cpufreq daemon and its OpenRC service, along with all its persistent changes can be removed by running:
 
 `# rc-service auto-cpufreq stop && rc-update del auto-cpufreq default`
 
